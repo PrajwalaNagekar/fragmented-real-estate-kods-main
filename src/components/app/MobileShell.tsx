@@ -33,7 +33,7 @@ const MobileShell = ({ children, hideChrome, activeTab = "home", onTabChange, th
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white p-2 sm:p-4">
-      <div className="relative w-full max-w-[393px] h-[852px] bg-background rounded-[44px] overflow-hidden border-4 border-black shadow-[0_20px_70px_-10px_rgba(0,0,0,0.15),0_0_1px_1px_rgba(0,0,0,0.05)]">        {/* Notch */}
+      <div className="relative w-full max-w-[393px] h-[852px] bg-background rounded-[44px] overflow-hidden border-8 border-black shadow-[0_20px_70px_-10px_rgba(0,0,0,0.15),0_0_1px_1px_rgba(0,0,0,0.05)]">        {/* Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[126px] h-[34px] bg-[#000] rounded-b-[18px] z-50" />
 
         {/* Status Bar */}
