@@ -12,13 +12,12 @@ const EditProfile = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => 
   return (
     <div className="px-4 pb-6 space-y-5">
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={() => onNavigate("dashboard")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+        <button onClick={() => onNavigate("profile")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
         <h1 className="text-base font-display font-bold text-foreground">Edit Profile</h1>
       </div>
 
-      {/* Avatar */}
       <div className="flex justify-center">
         <div className="relative">
           <div className="w-20 h-20 rounded-full gradient-gold flex items-center justify-center">
@@ -49,13 +48,9 @@ const EditProfile = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => 
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button onClick={() => onNavigate("dashboard")} className="flex-1 py-3 rounded-xl bg-accent text-sm font-medium text-foreground text-center">
-          Cancel
-        </button>
-        <button onClick={() => { toast({ title: "Profile Updated" }); onNavigate("dashboard"); }}
-          className="flex-1 py-3 rounded-xl gradient-gold text-white text-sm font-semibold">
-          Save Changes
-        </button>
+        <button onClick={() => onNavigate("profile")} className="flex-1 py-3 rounded-xl bg-accent text-sm font-medium text-foreground text-center">Cancel</button>
+        <button onClick={() => { toast({ title: "Profile Updated" }); onNavigate("profile"); }}
+          className="flex-1 py-3 rounded-xl gradient-gold text-white text-sm font-semibold">Save Changes</button>
       </div>
     </div>
   );

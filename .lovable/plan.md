@@ -1,231 +1,235 @@
-# One Property — Product Corrections & Feature Update Plan
+# One Property — Phase 3: Major Feature & Design Update
 
-This plan applies targeted corrections and new features to the existing prototype. No redesign from scratch — all changes layer onto the current architecture.
-
----
-
-## Color & Font Adjustments (from reference site + uploaded palette)
-
-- Update primary gold from `hsl(43, 96%, 56%)` to `#D0A476` (warm muted gold from the uploaded palette)
-- Update teal accent to match the deep teal `#1A7A7A` from the reference site
-- Keep `Playfair Display` for headings (matches the reference serif style)
-- Theme system simplified to **Light** (default, cream/white background) and **Dark** (deep black like reference site)
-- Remove "Mid-Dark" theme, replace with clean Light + Dark toggle
+This plan applies structured feature additions, flow improvements, and a complete color palette overhaul to the existing prototype. No redesign from scratch.
 
 ---
 
-## 1. Navigation Restructure
+## Color Palette Overhaul (Blue Theme)  
+[https://media-fast.be/](https://media-fast.be/)   
+and  
+ [https://www.gulftainer.com/](https://www.gulftainer.com/)  
+Also use this web link colors to make it look premium
 
-**Bottom tabs change from 4 to 3 main tabs:**
+Replace the current gold/teal palette with the uploaded blue gradient palette:
 
-- **Home** (Dashboard)
-- **Market** (Marketplace)
-- **Portfolio** (My Fragments + Document Vault combined)
 
-**Everything else moves under the hamburger/profile menu:**
+| Token                  | Old Value          | New Value                              |
+| ---------------------- | ------------------ | -------------------------------------- |
+| `--primary`            | `#D0A476` (gold)   | `#5555ED` (mid blue)                   |
+| `--primary-foreground` | white              | white                                  |
+| `--teal` (accent)      | `#1A7A7A`          | `#2323D8` (deep blue)                  |
+| `--rose` (highlight)   | pink               | `#8282F3` (light blue)                 |
+| Light background       | cream `30 20% 96%` | clean white `240 10% 97%`              |
+| Dark background        | `0 0% 5%`          | `240 30% 4%` (`#050544` based)         |
+| Accent surfaces        | warm beige         | `#DADAFB` / `#AEAEF8` tints            |
+| gradient-gold class    | gold gradient      | blue gradient (`#5555ED` to `#2323D8`) |
+| glow-gold class        | gold glow          | blue glow                              |
 
-- Secondary Market
-- Help & FAQ
+
+**Files:** `src/index.css`, `tailwind.config.ts`
+
+---
+
+## iPhone 16 Design Update (MobileShell.tsx)
+
+- Change the **notch** to a **Dynamic Island** pill shape (wider, shorter, pill-shaped cutout matching iPhone 16)
+- Adjust border radius and frame dimensions to match iPhone 16 proportions
+- Keep status bar with time, signal, WiFi, battery visible at all times (including splash)
+- show front camera
+
+---
+
+## Navigation Restructure
+
+Current: Home | Market | Portfolio (3 tabs) + Hamburger menu
+
+New: Home | Market | Portfolio | Profile (4 bottom tabs)
+
+- **Remove hamburger menu entirely** (three-line icon removed)
+- **Add "Profile" tab** with User icon as the 4th bottom tab
+- Profile tab opens the profile/account screen directly (not a side panel)
+
+**Profile screen contains:**
+
+- User info header (Welcome, Rahul Kapoor)
+- Edit Profile
+- KYC Section (new)
+- Blockchain Education (new)
 - Settings
+- Help & FAQ
 - About Us
 - Terms & Conditions
+- Account Deletion / Exit
+- Logout
+- Remove Secondary Market from profile and keep it in Market section.
 
-**Hamburger menu (three-line icon) replaces three-dot icon** on top-left.
-
----
-
-## 2. Home Screen Updates
-
-- **Notification bell icon** placed at **top-right** of the Home screen header (next to the greeting)
-- Remove notifications from the More/Profile section
-- **Welcome message**: "Welcome back, Rahul" instead of just "Good evening"
-- **Graphs with touch interactivity**: Add `Tooltip` from Recharts to the Wealth Over Time chart so finger-dragging shows values
-- **Time period filter**: Add "Today / Month / Year" toggle buttons above the wealth chart for analytics switching
-- **Status bar fix**: Replace signal bars with proper signal icon + WiFi icon next to "5G"
+**Files:** `MobileShell.tsx`, `Index.tsx` (new screen type "profile"), new `ProfileScreen.tsx`
 
 ---
 
-## 3. Portfolio Tab (Combined Screen)
+## New Features & Screens
 
-The Portfolio tab becomes a hub with sub-sections:
+### 1. Blockchain Education Page (new: `BlockchainEducation.tsx`)
 
-### My Fragments (default view)
+Accessed from Profile. Premium educational content:
 
-- **Map View as default**: Show a styled map placeholder with property pins at Indian locations (Sakleshpur, Bangalore, Goa, Hampi, Coorg, Mangalore, Udupi)
-- Toggle between Map View and List View
-- Each fragment card shows property photo, ownership %, and a **Power of Attorney badge**: "Power of Attorney Issued - Owner Verified"
-- **Rent/Sell Fragment buttons** on each fragment card (functional modal with price input and action confirmation)
+- "How Blockchain Protects Your Property" header
+- Visual 5-step process with icons and animations:
+  1. Property Tokenized
+  2. Ownership Recorded
+  3. Token Issued
+  4. Power of Attorney Generated
+  5. Blockchain Validation
+- Simple explanations of tokenization, dynamic token verification, and ledger anchoring
+- Premium card-based layout matching existing design language
 
-### Document Vault (sub-tab within Portfolio)
+### 2. KYC Section (new: `KYCFlow.tsx`)
 
-- Move Document Vault from More into Portfolio as a tab
-- Keep existing document list with verification badges
+Accessed from Profile. Full 4-step KYC flow:
 
-### Token Visibility Change
+- **Banner**: "KYC Pending - Complete Now" (if incomplete) with option to skip
+- **Step 1 - Personal Details**: Full Name, Email, Primary Phone, Additional Phones, Occupation, Address, Place of Birth, Family Member Details
+- **Step 2 - Document Upload**: Aadhaar/PAN, Address Proof, Photo Upload with checklist and upload status
+- **Step 3 - Video KYC**: Instructions screen, start verification button, simulated video flow
+- **Step 4 - Verification Status**: "Verification in progress" message, "Approval within 24 hours", after approval shows KYC Verified badge
+- Progress bar across top showing completion percentage
 
-- Token ID / blockchain hash **hidden by default**
-- "Show Token" button reveals the token details with a smooth expand animation
-- Maintains privacy-first, secure appearance
+### 3. Login/Signup System Update (`OnboardingFlow.tsx`)
 
----
+Replace current single-flow onboarding with two entry paths:
 
-## 4. Property & Fragment Data Expansion
+- **Entry screen**: Two buttons - "Sign In" and "Sign Up"
+- **Sign In**: Phone+OTP, Email+OTP, or Password login -> Dashboard directly
+- **Sign Up**: Full onboarding (Name, Phone, Email -> OTP -> Document upload -> Profile creation)
+- KYC can be completed later from Account -> KYC section
+- "Complete Later" option during onboarding KYC step
 
-Add diverse property types with Karnataka/South India locations:
+### 4. Buy Fragment Flow Update (`PropertyDetail.tsx`)
 
-- **Sakleshpur Coffee Estate** (Land/Estate)
-- **Whitefield Tech Park, Bangalore** (Commercial)
-- **Calangute Beach Villa, Goa** (Holiday Property)
-- **Heritage Site View, Hampi** (Cabin/Heritage)
-- **Bangalore Rural Farmhouse** (Land)
-- **Coorg Hill Retreat** (Cabin/Holiday)
-- **Mangalore Coastal Property** (Villa)
-- **Udupi Temple Town Residence** (Apartment)
+Replace simple "Buy Fragment" button with structured multi-step flow:
 
-Property types now include: Villa, Apartment, Tower, Land, Estate, Cabin, Commercial, Holiday Property.
+- Step 1: Select fragment on blueprint
+- Step 2: Price breakdown display (fragment price, platform fee, GST, total)
+- Step 3: Two CTAs - "Create Request" and "Submit Enquiry"
+- Step 4: Confirmation - "One Property team will contact you within 24 hours"
+- Show next steps: Site Visit, Agreement Signing, POA Transfer, Final Documentation
 
----
+### 5. Purchase Journey Tracker (new: `PurchaseTracker.tsx`)
 
-## 5. Profile / Hamburger Menu Overhaul
+After request creation, show visual tracker:
 
-The side panel becomes a full profile hub:
+- Six steps with check/pending icons:
+  1. Request Created (completed)
+  2. Verification in Progress (pending)
+  3. Site Visit Scheduling (pending)
+  4. Documentation Preparation (pending)
+  5. Power of Attorney Issuance (pending)
+  6. Final Payment & Registration (pending)
+- Progress bar visualization
+- After completion: "All documents have been emailed to you"
 
-### Header
+### 6. Portfolio Updates (`PortfolioHub.tsx`)
 
-- Welcome message: "Welcome, Rahul Kapoor"
-- Profile avatar with edit icon
-- "Premium Investor" badge
+Add new sub-sections:
 
-### Edit Profile Section
+**Data Management tab** (moved from Settings):
 
-- Editable fields: Name, Phone, Email, Profile Photo, Profession
-- Save/Cancel buttons
+- Export owned fragment details
+- Export transaction history
+- Export rental/sale listings
+- Export POA documents
+- Export KYC documents
+- PDF and Excel export buttons
 
-### Menu Items
+**My Listed Properties tab**:
 
-- **Secondary Market** (moved here from bottom nav)
-- **Settings** (opens structured settings page)
-- **About Us** (One Property company info)
-- **Terms & Conditions**
-- **Help & FAQ** (moved from More tab)
-- **Logout**
+- Two sections: "Listed for Rent" and "Listed for Sale"
+- Each shows: map preview, status, price, verification stage
+- Mock data for listed properties
 
----
+**Rent & Sell bar/section**:
 
-## 6. Settings Page (Enterprise-Level Structure)
+- Prominent "Rent & Sell" section in Portfolio
+- **Rent Flow**: Select owned property -> Enter rental price, duration, terms, description -> Submit -> "Verification Pending" status
+- **Sell Flow**: Select owned property -> Show map location -> Set selling price, description -> Submit -> "Verification Pending" status
 
-A dedicated Settings screen accessed from the profile menu:
+Portfolio sub-tabs become: My Fragments | Documents | Listed | Data Export
 
-### Appearance
+### 7. Splash Screen Fix (`SplashScreen.tsx`)
 
-- Light / Dark theme toggle (replaces 3-theme system)
+- Make background image cover entire screen edge-to-edge (remove any padding/margins)
+- Image extends behind status bar area
+- Status bar icons remain visible on top of the image
+- Smooth transition to login screen
 
-### Notification Preferences
+### 8. Settings Update (`SettingsPage.tsx`)
 
-- Master toggle on/off
-- Category toggles: Investment Alerts, Rental Payouts, Market Updates, Security Alerts
+- **Remove** Data Management section (moved to Portfolio)
+- Keep: Appearance (Light/Dark), Notifications, Security, Regional Settings
 
-### Security
+### 9. Help & FAQ Update (`HelpFaq.tsx`)
 
-- Change Password (form with current/new/confirm fields)
-- Two-Factor Authentication toggle
+Add contact information section:
 
-### Regional Settings
+- Support Email: [support@oneproperty.in](mailto:support@oneproperty.in)
+- Customer Support: +91 80 1234 5678
+- Investment Support: +91 80 9876 5432
+- Emergency Assistance: +91 80 5555 1234
 
-- Language selector (English, Hindi, Kannada)
-- Region selector (India, etc.)
+### 10. Secondary Market Enhancement (`SecondaryMarket.tsx`)
 
-### Data Management (Critical Feature)
+Add more comprehensive data:
 
-- **Backup Fragments Data** button
-- **Backup Uploaded Documents** button
-- **Backup One Property Documents** button
-- **Export Options**: PDF and Excel buttons
-- Export includes: Fragment details, Ownership documents, KYC documents, Power of Attorney documents
-- Each export triggers a toast notification confirming the action
-
----
-
-## 7. Secondary Market Enhancement
-
-Move to profile menu access. Add richer content:
-
-- Market statistics header (total volume, active listings, avg. price change)
-- Detailed listing cards with property photos, seller rating, listing duration
-- Price history chart with Recharts Tooltip for touch interaction
-- Market trends section with buyer/seller ratio
-- Fragment condition/quality indicators
-
----
-
-## 8. Splash Screen Update
-
-- Add a **luxury real estate background video/image** — use a high-quality Unsplash image of a luxury property with a dark overlay
-- Animated gradient overlay for the vibrant luxury feel
-- Keep the "O" logo and shimmer animation on top
-
----
-
-## 9. Graph Interactivity
-
-All charts across the app get:
-
-- **Recharts `Tooltip**` component so touching/hovering shows exact values
-- **Active dot** indicator on line/area charts
-- **Time period selector** (Today / Month / Year) on Dashboard wealth chart with different mock data per period
+- Market depth indicators
+- Recent trades feed
+- Fragment quality scores
+- Seller verification badges
+- More detailed listing cards with verification stage
 
 ---
 
-## 10. Rent/Sell Fragment Feature
+---
 
-Inside My Fragments detail view:
+## Files Changed Summary
 
-- Two action buttons: "Rent Fragment" and "Sell Fragment"
-- **Rent modal**: Set monthly rent amount, minimum lease period, confirm listing
-- **Sell modal**: Set asking price, choose fragments to sell, confirm listing
-- Both show a confirmation toast on success
+
+| File                                                  | Action | Description                                                     |
+| ----------------------------------------------------- | ------ | --------------------------------------------------------------- |
+| `src/index.css`                                       | Edit   | Blue palette, updated CSS variables                             |
+| `tailwind.config.ts`                                  | Edit   | Update color tokens                                             |
+| `src/pages/Index.tsx`                                 | Edit   | Add new screen types, 4-tab nav, new routes                     |
+| `src/components/app/MobileShell.tsx`                  | Edit   | iPhone 16 Dynamic Island, 4 tabs with Profile, remove hamburger |
+| `src/components/app/SplashScreen.tsx`                 | Edit   | Full-bleed background                                           |
+| `src/components/app/OnboardingFlow.tsx`               | Edit   | Sign In / Sign Up split, skip KYC option                        |
+| `src/components/app/Dashboard.tsx`                    | Edit   | Blue color references                                           |
+| `src/components/app/PortfolioHub.tsx`                 | Edit   | Add Listed Properties, Data Management, Rent/Sell flows         |
+| `src/components/app/PropertyDetail.tsx`               | Edit   | Buy fragment multi-step flow                                    |
+| `src/components/app/FragmentDetail.tsx`               | Edit   | Color updates                                                   |
+| `src/components/app/SecondaryMarket.tsx`              | Edit   | Enhanced market data                                            |
+| `src/components/app/SettingsPage.tsx`                 | Edit   | Remove Data Management                                          |
+| `src/components/app/HelpFaq.tsx`                      | Edit   | Add contact numbers                                             |
+| `src/data/mockData.ts`                                | Edit   | Add listed properties data, purchase tracker data               |
+| **New:** `src/components/app/ProfileScreen.tsx`       | Create | Profile/Account hub screen                                      |
+| **New:** `src/components/app/BlockchainEducation.tsx` | Create | Blockchain education page                                       |
+| **New:** `src/components/app/KYCFlow.tsx`             | Create | Full KYC step flow                                              |
+| **New:** `src/components/app/PurchaseTracker.tsx`     | Create | Purchase journey tracker                                        |
+| **New:** `src/pages/Admin.tsx`                        | Create | Admin panel page                                                |
+| `src/App.tsx`                                         | Edit   | Add /admin route                                                |
+
 
 ---
 
-11. **Add a Account deletion/Exit from One Property request button at last in the profile inside more option, which will navigate to approval and sign off agreement process**
+## Implementation Order
 
-## 12. About Us & Terms Pages
-
-### About Us
-
-- One Property company description
-- Mission statement
-- Team/founding info (mock)
-- Contact details
-
-### Terms & Conditions
-
-- Standard T&C content for a real estate tokenization platform
-- Scrollable text view
-
----
-
-## Technical Implementation Summary
-
-All changes will be implemented in a single consolidated update to the existing files:  
-And make all the code avaible in one single file. or a downloadable file.
-
-
-| File                                                | Changes                                                                                                                                             |
-| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/index.css`                                     | Update color variables for new gold (#D0A476), teal, Light/Dark themes                                                                              |
-| `src/data/mockData.ts`                              | Add 8 new properties with South India locations, expanded secondary market data, time-period wealth data                                            |
-| `src/pages/Index.tsx`                               | Update AppScreen types, restructure navigation to 3 tabs, add new screen routes (settings, aboutUs, terms, editProfile, notifications)              |
-| `src/components/app/MobileShell.tsx`                | Change to hamburger icon, 3 bottom tabs, WiFi icon in status bar, notification bell on home                                                         |
-| `src/components/app/Dashboard.tsx`                  | Add notification icon top-right, welcome message, Tooltip on charts, Today/Month/Year toggle                                                        |
-| `src/components/app/BlockchainPage.tsx`             | Convert to Portfolio hub with tabs (My Fragments / Documents), hide token by default with Show Token button, POA badge, map view, Rent/Sell buttons |
-| `src/components/app/FragmentDetail.tsx`             | Add POA badge, hide token by default, add Rent/Sell Fragment buttons with modals                                                                    |
-| `src/components/app/SecondaryMarket.tsx`            | Enhanced with more market data, statistics, Tooltip on charts                                                                                       |
-| `src/components/app/SplashScreen.tsx`               | Add luxury background image with overlay                                                                                                            |
-| `src/components/app/MoreTab.tsx`                    | Remove (functionality redistributed to Profile menu and Portfolio)                                                                                  |
-| `src/components/app/DocumentVault.tsx`              | Stays but accessed from Portfolio tab                                                                                                               |
-| **New:** `src/components/app/SettingsPage.tsx`      | Full structured settings with Appearance, Notifications, Security, Regional, Data Management                                                        |
-| **New:** `src/components/app/EditProfile.tsx`       | Profile editing form                                                                                                                                |
-| **New:** `src/components/app/AboutUs.tsx`           | Company info page                                                                                                                                   |
-| **New:** `src/components/app/TermsConditions.tsx`   | T&C page                                                                                                                                            |
-| **New:** `src/components/app/NotificationsPage.tsx` | Notifications list page                                                                                                                             |
+1. Color palette and theme (CSS + Tailwind config)
+2. MobileShell (iPhone 16 + 4-tab nav + remove hamburger)
+3. ProfileScreen (new hub for all account features)
+4. Index.tsx routing updates
+5. Splash screen + Login system
+6. KYC Flow
+7. Blockchain Education
+8. Portfolio updates (Data Management, Listed Properties, Rent/Sell)
+9. Buy Fragment flow + Purchase Tracker
+10. Settings, Help/FAQ, Secondary Market updates
+11. All component color updates
+12. Admin panel

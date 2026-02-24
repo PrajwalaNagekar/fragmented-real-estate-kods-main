@@ -16,6 +16,10 @@ import TermsConditions from "@/components/app/TermsConditions";
 import HelpFaq from "@/components/app/HelpFaq";
 import NotificationsPage from "@/components/app/NotificationsPage";
 import AccountDeletion from "@/components/app/AccountDeletion";
+import ProfileScreen from "@/components/app/ProfileScreen";
+import BlockchainEducation from "@/components/app/BlockchainEducation";
+import KYCFlow from "@/components/app/KYCFlow";
+import PurchaseTracker from "@/components/app/PurchaseTracker";
 
 export type AppScreen =
   | "splash"
@@ -32,7 +36,11 @@ export type AppScreen =
   | "terms"
   | "helpFaq"
   | "notifications"
-  | "accountDeletion";
+  | "accountDeletion"
+  | "profile"
+  | "blockchainEducation"
+  | "kyc"
+  | "purchaseTracker";
 
 const Index = () => {
   const [screen, setScreen] = useState<AppScreen>("splash");
@@ -89,15 +97,26 @@ const Index = () => {
         return <NotificationsPage onNavigate={navigate} />;
       case "accountDeletion":
         return <AccountDeletion onNavigate={navigate} />;
+      case "profile":
+        return <ProfileScreen onNavigate={navigate} />;
+      case "blockchainEducation":
+        return <BlockchainEducation onNavigate={navigate} />;
+      case "kyc":
+        return <KYCFlow onNavigate={navigate} />;
+      case "purchaseTracker":
+        return <PurchaseTracker onNavigate={navigate} />;
       default:
         return <Dashboard onNavigate={navigate} />;
     }
   };
 
-  const getActiveTab = (): "home" | "marketplace" | "portfolio" => {
+  type Tab = "home" | "marketplace" | "portfolio" | "profile";
+
+  const getActiveTab = (): Tab => {
     if (screen === "dashboard" || screen === "notifications") return "home";
-    if (screen === "marketplace" || screen === "propertyDetail") return "marketplace";
+    if (screen === "marketplace" || screen === "propertyDetail" || screen === "secondaryMarket" || screen === "purchaseTracker") return "marketplace";
     if (screen === "portfolio" || screen === "fragmentDetail") return "portfolio";
+    if (screen === "profile" || screen === "editProfile" || screen === "settings" || screen === "aboutUs" || screen === "terms" || screen === "helpFaq" || screen === "accountDeletion" || screen === "blockchainEducation" || screen === "kyc") return "profile";
     return "home";
   };
 
@@ -108,6 +127,7 @@ const Index = () => {
         if (tab === "home") navigate("dashboard");
         else if (tab === "marketplace") navigate("marketplace");
         else if (tab === "portfolio") navigate("portfolio");
+        else if (tab === "profile") navigate("profile");
       }}
       theme={theme}
       onThemeChange={setTheme}

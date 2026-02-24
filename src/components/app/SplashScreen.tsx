@@ -1,18 +1,21 @@
 import { motion } from "framer-motion";
 
 const SplashScreen = () => (
-  <div className="h-full flex flex-col items-center justify-center relative overflow-hidden">
-    {/* Luxury real estate background */}
+  <div
+    className="h-full flex flex-col items-center justify-center relative overflow-hidden"
+    style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+  >
+    {/* Full-bleed luxury background */}
     <div className="absolute inset-0">
       <img
         src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=1200&fit=crop"
         alt="Luxury property"
         className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#050520]/80 via-[#0a0a3d]/60 to-[#050520]/90" />
       <motion.div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(135deg, hsl(28, 40%, 64%, 0.15) 0%, transparent 50%, hsl(174, 60%, 35%, 0.1) 100%)" }}
+        style={{ background: "linear-gradient(135deg, hsl(240, 82%, 63%, 0.2) 0%, transparent 50%, hsl(240, 90%, 40%, 0.15) 100%)" }}
         animate={{ opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 4, repeat: Infinity }}
       />
@@ -50,7 +53,7 @@ const SplashScreen = () => (
         transition={{ delay: 1.2 }}
         className="mt-4 text-xs text-white/70 tracking-[0.2em] uppercase"
       >
-        Luxury Fractional Ownership
+        Trusted Fractional Ownership
       </motion.p>
     </motion.div>
 
@@ -58,7 +61,8 @@ const SplashScreen = () => (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 1.8 }}
-      className="absolute bottom-20 flex gap-1 z-10"
+      className="absolute flex gap-1 z-10"
+      style={{ bottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}
     >
       {[0, 1, 2].map(i => (
         <motion.div

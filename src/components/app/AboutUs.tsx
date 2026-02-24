@@ -4,7 +4,7 @@ import type { AppScreen } from "@/pages/Index";
 const AboutUs = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => (
   <div className="px-4 pb-6 space-y-5">
     <div className="flex items-center gap-3 pt-2">
-      <button onClick={() => onNavigate("dashboard")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+      <button onClick={() => onNavigate("profile")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
         <ArrowLeft className="w-4 h-4 text-foreground" />
       </button>
       <h1 className="text-base font-display font-bold text-foreground">About Us</h1>
@@ -36,7 +36,7 @@ const AboutUs = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => (
         <Target className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
         <div>
           <p className="text-xs font-semibold text-foreground">Our Mission</p>
-          <p className="text-[11px] text-muted-foreground leading-relaxed mt-1">To democratize luxury real estate investment by enabling fractional ownership with full transparency, legal protection through Power of Attorney, and blockchain-verified trust — making premium properties accessible to every investor.</p>
+          <p className="text-[11px] text-muted-foreground leading-relaxed mt-1">To democratize luxury real estate investment by enabling fractional ownership with full transparency, legal protection through Power of Attorney, and blockchain-verified trust.</p>
         </div>
       </div>
     </div>

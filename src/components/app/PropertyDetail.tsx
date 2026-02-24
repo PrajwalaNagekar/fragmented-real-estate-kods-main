@@ -1,21 +1,34 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, TrendingUp, Users, BarChart3, Navigation, TreePine, GraduationCap, Heart, Building } from "lucide-react";
-import { AreaChart, Area, XAxis, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, MapPin, TrendingUp, Users, BarChart3, Navigation, ChevronRight, CheckCircle2, MessageCircle, Phone } from "lucide-react";
+import { AreaChart, Area, XAxis, ResponsiveContainer, BarChart, Bar, Tooltip } from "recharts";
 import { properties, neighborhoodData, formatCurrency } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
+
+type BuyStep = "browse" | "breakdown" | "confirm";
 
 const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavigate: (s: AppScreen, id?: string) => void }) => {
   const property = properties.find(p => p.id === propertyId) || properties[0];
   const [shares, setShares] = useState(1);
+  const [buyStep, setBuyStep] = useState<BuyStep>("browse");
 
-  // Mock fragment grid (10x10)
   const ownedFragments = [14, 15, 22, 23, 24];
   const soldFragments = Array.from({ length: property.soldFragments }, (_, i) => i + 1).filter(f => !ownedFragments.includes(f));
 
+  const fragmentPrice = property.pricePerFragment * shares;
+  const platformFee = Math.round(fragmentPrice * 0.02);
+  const gst = Math.round(fragmentPrice * 0.18);
+  const totalPrice = fragmentPrice + platformFee + gst;
+
+  const PriceTooltip = ({ active, payload }: any) => {
+    if (active && payload?.[0]) {
+      return <div className="bg-card border border-border rounded-lg px-2 py-1 shadow-lg"><p className="text-[10px] font-semibold text-primary">{payload[0].value}%</p></div>;
+    }
+    return null;
+  };
+
   return (
     <div className="pb-6">
-      {/* Hero */}
       <div className="relative h-[200px]">
         <img src={property.image} alt={property.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
@@ -33,7 +46,6 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
           </div>
         </div>
 
-        {/* Key Metrics */}
         <div className="grid grid-cols-3 gap-2">
           {[
             { label: "Per Share", value: formatCurrency(property.pricePerFragment), icon: BarChart3 },
@@ -50,7 +62,7 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
 
         <p className="text-xs text-foreground/70 leading-relaxed">{property.description}</p>
 
-        {/* Interactive Fragment Blueprint */}
+        {/* Fragment Blueprint */}
         <div className="p-4 rounded-2xl bg-card border border-border">
           <p className="text-xs text-muted-foreground mb-3">Fragment Blueprint</p>
           <div className="grid grid-cols-10 gap-[3px]">
@@ -58,14 +70,8 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
               const isOwned = ownedFragments.includes(f);
               const isSold = soldFragments.includes(f);
               return (
-                <motion.button
-                  key={f}
-                  whileHover={{ scale: 1.3 }}
-                  className={`aspect-square rounded-[3px] text-[6px] flex items-center justify-center transition-colors ${
-                    isOwned ? "bg-primary text-primary-foreground glow-gold" :
-                    isSold ? "bg-muted-foreground/30" : "bg-accent border border-border hover:border-primary/50"
-                  }`}
-                >
+                <motion.button key={f} whileHover={{ scale: 1.3 }}
+                  className={`aspect-square rounded-[3px] text-[6px] flex items-center justify-center transition-colors ${isOwned ? "bg-primary text-primary-foreground glow-gold" : isSold ? "bg-muted-foreground/30" : "bg-accent border border-border hover:border-primary/50"}`}>
                   {isOwned && "★"}
                 </motion.button>
               );
@@ -78,32 +84,79 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
           </div>
         </div>
 
-        {/* Buy Fragment CTA */}
-        <div className="p-4 rounded-2xl bg-card border border-border">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs text-muted-foreground">Fragments to buy</span>
-            <span className="text-sm font-bold text-primary">{shares}</span>
-          </div>
-          <input
-            type="range" min={1} max={10} value={shares} onChange={e => setShares(Number(e.target.value))}
-            className="w-full accent-[hsl(43,96%,56%)] mb-3"
-          />
-          <div className="flex justify-between text-xs text-muted-foreground mb-3">
-            <span>Total: {formatCurrency(property.pricePerFragment * shares)}</span>
-            <span>{property.totalFragments - property.soldFragments} available</span>
-          </div>
-          <button className="w-full py-3 rounded-xl gradient-gold text-primary-foreground font-semibold text-sm glow-gold active:scale-[0.98] transition-transform">
-            Buy {shares} Fragment{shares > 1 ? "s" : ""}
-          </button>
-        </div>
+        {/* Buy Fragment - Multi-step */}
+        <AnimatePresence mode="wait">
+          {buyStep === "browse" && (
+            <motion.div key="browse" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 rounded-2xl bg-card border border-border">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-muted-foreground">Fragments to buy</span>
+                <span className="text-sm font-bold text-primary">{shares}</span>
+              </div>
+              <input type="range" min={1} max={10} value={shares} onChange={e => setShares(Number(e.target.value))} className="w-full accent-primary mb-3" />
+              <div className="flex justify-between text-xs text-muted-foreground mb-3">
+                <span>Total: {formatCurrency(property.pricePerFragment * shares)}</span>
+                <span>{property.totalFragments - property.soldFragments} available</span>
+              </div>
+              <button onClick={() => setBuyStep("breakdown")} className="w-full py-3 rounded-xl gradient-gold text-primary-foreground font-semibold text-sm glow-gold active:scale-[0.98] transition-transform">
+                Buy {shares} Fragment{shares > 1 ? "s" : ""}
+              </button>
+            </motion.div>
+          )}
+
+          {buyStep === "breakdown" && (
+            <motion.div key="breakdown" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-4 rounded-2xl bg-card border border-border space-y-3">
+              <p className="text-xs font-semibold text-foreground">Price Breakdown</p>
+              <div className="space-y-2">
+                {[
+                  { label: `Fragment Price (${shares}x)`, value: formatCurrency(fragmentPrice) },
+                  { label: "Platform Fee (2%)", value: formatCurrency(platformFee) },
+                  { label: "GST (18%)", value: formatCurrency(gst) },
+                ].map(row => (
+                  <div key={row.label} className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">{row.label}</span>
+                    <span className="text-foreground">{row.value}</span>
+                  </div>
+                ))}
+                <div className="border-t border-border pt-2 flex justify-between">
+                  <span className="text-xs font-semibold text-foreground">Total</span>
+                  <span className="text-sm font-bold text-primary">{formatCurrency(totalPrice)}</span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setBuyStep("confirm")} className="flex-1 py-3 rounded-xl gradient-gold text-white text-sm font-semibold">Create Request</button>
+                <button onClick={() => setBuyStep("confirm")} className="flex-1 py-3 rounded-xl bg-accent border border-border text-sm font-medium text-foreground">Submit Enquiry</button>
+              </div>
+              <button onClick={() => setBuyStep("browse")} className="text-[10px] text-muted-foreground w-full text-center">← Back</button>
+            </motion.div>
+          )}
+
+          {buyStep === "confirm" && (
+            <motion.div key="confirm" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3 text-center">
+              <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
+              <p className="text-sm font-display font-bold text-foreground">Request Submitted!</p>
+              <p className="text-[11px] text-muted-foreground">One Property team will contact you within 24 hours.</p>
+              <div className="text-left space-y-2 pt-2">
+                <p className="text-[10px] font-semibold text-foreground">Next Steps:</p>
+                {["Site Visit Scheduling", "Agreement Signing", "Power of Attorney Transfer", "Final Documentation"].map((s, i) => (
+                  <div key={s} className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary">{i + 1}</div>
+                    <span className="text-[11px] text-muted-foreground">{s}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button onClick={() => onNavigate("purchaseTracker")} className="flex-1 py-2.5 rounded-xl gradient-gold text-white text-xs font-semibold">Track Purchase</button>
+                <button onClick={() => setBuyStep("browse")} className="flex-1 py-2.5 rounded-xl bg-accent text-xs font-medium text-foreground">Browse More</button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Neighborhood Insights */}
         <div className="p-4 rounded-2xl bg-card border border-border">
           <p className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
             <Navigation className="w-3.5 h-3.5 text-primary" /> Neighborhood Insights
           </p>
-
-          {/* Walkability */}
           <div className="flex items-center gap-3 mb-4">
             <div className="relative w-12 h-12">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
@@ -120,21 +173,18 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
               <p className="text-[10px] text-muted-foreground">Very Walkable</p>
             </div>
           </div>
-
-          {/* Amenities */}
           <div className="flex flex-wrap gap-1.5 mb-4">
             {neighborhoodData.amenities.map(a => (
               <span key={a} className="px-2 py-1 rounded-lg bg-accent text-[10px] text-foreground/80 border border-border">{a}</span>
             ))}
           </div>
-
-          {/* Growth Trend */}
           <p className="text-[10px] text-muted-foreground mb-2">Area Growth Trend (%)</p>
           <div className="h-[80px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={neighborhoodData.growthTrend}>
-                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "hsl(220, 10%, 55%)", fontSize: 9 }} />
-                <Bar dataKey="growth" fill="hsl(174, 72%, 50%)" radius={[4, 4, 0, 0]} />
+                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
+                <Tooltip content={<PriceTooltip />} />
+                <Bar dataKey="growth" fill="hsl(240, 90%, 40%)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

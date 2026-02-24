@@ -35,7 +35,6 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
         <h1 className="text-base font-display font-bold text-foreground">Fragment Details</h1>
       </div>
 
-      {/* Ownership Summary */}
       <div className="p-4 rounded-2xl bg-card border border-border space-y-3">
         <p className="text-sm font-semibold text-foreground">{fragment.propertyName}</p>
         <div className="grid grid-cols-2 gap-3">
@@ -62,7 +61,6 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
         </div>
       </div>
 
-      {/* POA Badge */}
       {fragment.poaIssued && (
         <div className="p-3 rounded-xl bg-teal/5 border border-teal/20 flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-teal" />
@@ -70,19 +68,17 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
         </div>
       )}
 
-      {/* Rent/Sell Buttons */}
       <div className="flex gap-2">
         <button onClick={() => setRentModal(true)}
           className="flex-1 py-3 rounded-xl bg-teal/10 border border-teal/20 text-sm font-semibold text-teal flex items-center justify-center gap-2">
-          <HomeIcon className="w-4 h-4" /> Rent Fragment
+          <HomeIcon className="w-4 h-4" /> Rent
         </button>
         <button onClick={() => setSellModal(true)}
           className="flex-1 py-3 rounded-xl bg-primary/10 border border-primary/20 text-sm font-semibold text-primary flex items-center justify-center gap-2">
-          <Tag className="w-4 h-4" /> Sell Fragment
+          <Tag className="w-4 h-4" /> Sell
         </button>
       </div>
 
-      {/* Ownership Certificate */}
       <button onClick={() => setShowCert(!showCert)}
         className="w-full p-4 rounded-2xl bg-primary/5 border border-primary/20 flex items-center gap-3">
         <Award className="w-6 h-6 text-primary" />
@@ -109,7 +105,6 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
         </motion.div>
       )}
 
-      {/* Blockchain Trust Badge - Token Hidden by Default */}
       <div className="p-4 rounded-2xl bg-card border border-border">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
@@ -139,7 +134,6 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
         </AnimatePresence>
       </div>
 
-      {/* Income History */}
       <div className="p-4 rounded-2xl bg-card border border-border">
         <p className="text-xs text-muted-foreground mb-3">Monthly Income</p>
         <div className="h-[100px]">
@@ -147,13 +141,13 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
             <AreaChart data={incomeHistory}>
               <defs>
                 <linearGradient id="tealGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(174, 60%, 35%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(174, 60%, 35%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(240, 90%, 40%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(240, 90%, 40%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="income" stroke="hsl(174, 60%, 35%)" strokeWidth={2} fill="url(#tealGrad)" activeDot={{ r: 4, fill: "hsl(174, 60%, 35%)" }} />
+              <Area type="monotone" dataKey="income" stroke="hsl(240, 90%, 40%)" strokeWidth={2} fill="url(#tealGrad)" activeDot={{ r: 4, fill: "hsl(240, 90%, 40%)" }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -174,8 +168,8 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
                   <label className="text-[10px] text-muted-foreground">Monthly Rent (₹)</label>
                   <input value={rentPrice} onChange={e => setRentPrice(e.target.value)} placeholder="e.g. 15000" className="w-full mt-1 bg-accent rounded-xl px-3 py-2.5 text-sm text-foreground outline-none border border-border focus:border-primary" />
                 </div>
-                <button onClick={() => { toast({ title: "Listed for Rent" }); setRentModal(false); }} className="w-full py-3 rounded-xl gradient-gold text-white text-sm font-semibold">
-                  Confirm Listing
+                <button onClick={() => { toast({ title: "Listed for Rent", description: "Status: Verification Pending" }); setRentModal(false); }} className="w-full py-3 rounded-xl gradient-gold text-white text-sm font-semibold">
+                  Submit for Review
                 </button>
               </div>
             </motion.div>
@@ -198,8 +192,8 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
                   <label className="text-[10px] text-muted-foreground">Asking Price (₹)</label>
                   <input value={sellPrice} onChange={e => setSellPrice(e.target.value)} placeholder="e.g. 500000" className="w-full mt-1 bg-accent rounded-xl px-3 py-2.5 text-sm text-foreground outline-none border border-border focus:border-primary" />
                 </div>
-                <button onClick={() => { toast({ title: "Listed for Sale" }); setSellModal(false); }} className="w-full py-3 rounded-xl gradient-gold text-white text-sm font-semibold">
-                  List for Sale
+                <button onClick={() => { toast({ title: "Listed for Sale", description: "Status: Verification Pending" }); setSellModal(false); }} className="w-full py-3 rounded-xl gradient-gold text-white text-sm font-semibold">
+                  Submit for Review
                 </button>
               </div>
             </motion.div>

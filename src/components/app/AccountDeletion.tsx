@@ -18,10 +18,8 @@ const AccountDeletion = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
       <div className="px-4 pb-6 pt-12 flex flex-col items-center text-center space-y-4">
         <CheckCircle2 className="w-16 h-16 text-teal" />
         <h2 className="text-lg font-display font-bold text-foreground">Request Submitted</h2>
-        <p className="text-xs text-muted-foreground max-w-[280px]">Your account deletion request has been submitted. Our team will review and process it within 7-10 business days. You'll receive an email confirmation.</p>
-        <button onClick={() => onNavigate("dashboard")} className="mt-4 py-3 px-8 rounded-xl bg-accent text-sm font-medium text-foreground">
-          Back to Home
-        </button>
+        <p className="text-xs text-muted-foreground max-w-[280px]">Your account deletion request has been submitted. Our team will review and process it within 7-10 business days.</p>
+        <button onClick={() => onNavigate("profile")} className="mt-4 py-3 px-8 rounded-xl bg-accent text-sm font-medium text-foreground">Back to Profile</button>
       </div>
     );
   }
@@ -29,7 +27,7 @@ const AccountDeletion = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
   return (
     <div className="px-4 pb-6 space-y-5">
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={() => onNavigate("dashboard")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+        <button onClick={() => onNavigate("profile")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
         <h1 className="text-base font-display font-bold text-foreground">Account Deletion</h1>
@@ -47,9 +45,7 @@ const AccountDeletion = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
         <p className="text-xs font-semibold text-foreground">Deletion Process</p>
         {steps.map((step, i) => (
           <div key={i} className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">
-              {i + 1}
-            </div>
+            <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">{i + 1}</div>
             <p className="text-[11px] text-foreground/80">{step}</p>
           </div>
         ))}
@@ -57,11 +53,8 @@ const AccountDeletion = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
 
       <div className="p-4 rounded-2xl bg-card border border-border">
         <label className="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded accent-destructive" />
-          <span className="text-[11px] text-foreground/80 leading-relaxed">
-            I understand that this action is permanent. I have reviewed my fragments, transferred my assets, and agree to the account closure terms.
-          </span>
+          <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-0.5 w-4 h-4 rounded accent-destructive" />
+          <span className="text-[11px] text-foreground/80 leading-relaxed">I understand that this action is permanent. I have reviewed my fragments, transferred my assets, and agree to the account closure terms.</span>
         </label>
       </div>
 

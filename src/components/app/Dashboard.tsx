@@ -100,15 +100,15 @@ const Dashboard = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => 
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
               <defs>
-                <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(28, 40%, 64%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(28, 40%, 64%)" stopOpacity={0} />
+                <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
               <YAxis hide />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" stroke="hsl(28, 40%, 64%)" strokeWidth={2} fill="url(#goldGrad)" activeDot={{ r: 5, fill: "hsl(28, 40%, 64%)" }} />
+              <Area type="monotone" dataKey="value" stroke="hsl(240, 82%, 63%)" strokeWidth={2} fill="url(#blueGrad)" activeDot={{ r: 5, fill: "hsl(240, 82%, 63%)" }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

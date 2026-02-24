@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ChevronDown, ChevronUp, MessageCircle, Mail } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, MessageCircle, Mail, Phone } from "lucide-react";
 import type { AppScreen } from "@/pages/Index";
 
 const faqs = [
@@ -18,10 +18,37 @@ const HelpFaq = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
   return (
     <div className="px-4 pb-6 space-y-5">
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={() => onNavigate("dashboard")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+        <button onClick={() => onNavigate("profile")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
         <h1 className="text-base font-display font-bold text-foreground">Help & FAQ</h1>
+      </div>
+
+      {/* Contact Information */}
+      <div className="p-4 rounded-2xl bg-card border border-border space-y-3">
+        <p className="text-xs font-semibold text-foreground">Contact Us</p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-accent">
+            <Mail className="w-4 h-4 text-primary" />
+            <div>
+              <p className="text-[10px] text-muted-foreground">Support Email</p>
+              <p className="text-xs font-medium text-foreground">support@oneproperty.in</p>
+            </div>
+          </div>
+          {[
+            { label: "Customer Support", number: "+91 80 1234 5678" },
+            { label: "Investment Support", number: "+91 80 9876 5432" },
+            { label: "Emergency Assistance", number: "+91 80 5555 1234" },
+          ].map(c => (
+            <div key={c.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-accent">
+              <Phone className="w-4 h-4 text-primary" />
+              <div>
+                <p className="text-[10px] text-muted-foreground">{c.label}</p>
+                <p className="text-xs font-medium text-foreground">{c.number}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-2">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, TrendingUp, ArrowUpRight, ShoppingCart, Tag, Star, Clock, BarChart3, Users } from "lucide-react";
+import { ArrowLeft, TrendingUp, ArrowUpRight, ShoppingCart, Tag, Star, Clock, BarChart3, Users, ShieldCheck, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { secondaryListings, fragmentPriceHistory, formatCurrency, userFragments, marketStats } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
@@ -22,7 +22,7 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
   return (
     <div className="px-4 pb-6 space-y-5">
       <div className="flex items-center gap-3 pt-2">
-        <button onClick={() => onNavigate("dashboard")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+        <button onClick={() => onNavigate("marketplace")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
         <h1 className="text-base font-display font-bold text-foreground">Secondary Market</h1>
@@ -44,12 +44,35 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
       </div>
 
       {/* Market Trends */}
-      <div className="p-3 rounded-xl bg-primary/5 border border-primary/20 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-primary" />
-          <span className="text-xs text-foreground">Buyer/Seller Ratio: <strong className="text-primary">{marketStats.buyerSellerRatio}</strong></span>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="p-3 rounded-xl bg-primary/5 border border-primary/20">
+          <div className="flex items-center gap-1.5 mb-1">
+            <Users className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[10px] font-semibold text-foreground">B/S Ratio</span>
+          </div>
+          <p className="text-sm font-bold text-primary">{marketStats.buyerSellerRatio}</p>
         </div>
-        <span className="text-[10px] text-muted-foreground">{marketStats.totalTradesThisMonth} trades this month</span>
+        <div className="p-3 rounded-xl bg-teal/5 border border-teal/20">
+          <div className="flex items-center gap-1.5 mb-1">
+            <Activity className="w-3.5 h-3.5 text-teal" />
+            <span className="text-[10px] font-semibold text-foreground">Trades</span>
+          </div>
+          <p className="text-sm font-bold text-teal">{marketStats.totalTradesThisMonth}</p>
+        </div>
+      </div>
+
+      {/* Market Depth */}
+      <div className="p-3 rounded-xl bg-card border border-border">
+        <p className="text-[10px] font-semibold text-foreground mb-2">Market Depth</p>
+        <div className="flex gap-1">
+          {[65, 78, 55, 82, 70, 88, 72, 60, 75, 80].map((v, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+              <div className="w-full rounded-sm bg-primary/20" style={{ height: `${v * 0.5}px` }}>
+                <div className="w-full rounded-sm bg-primary" style={{ height: `${v * 0.3}px` }} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Tabs */}
@@ -58,12 +81,12 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
           <button key={t} onClick={() => setTab(t)}
             className={`flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === t ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"}`}>
             {t === "buy" ? <ShoppingCart className="w-3.5 h-3.5" /> : <Tag className="w-3.5 h-3.5" />}
-            {t === "buy" ? "Browse Listings" : "List for Sale"}
+            {t === "buy" ? "Browse" : "List for Sale"}
           </button>
         ))}
       </div>
 
-      {/* Price History Chart */}
+      {/* Price Chart */}
       <div className="p-4 rounded-2xl bg-card border border-border">
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs text-muted-foreground">Fragment Price Trend</p>
@@ -76,15 +99,38 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
             <AreaChart data={fragmentPriceHistory}>
               <defs>
                 <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(28, 40%, 64%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(28, 40%, 64%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="price" stroke="hsl(28, 40%, 64%)" strokeWidth={2} fill="url(#priceGrad)" activeDot={{ r: 4, fill: "hsl(28, 40%, 64%)" }} />
+              <Area type="monotone" dataKey="price" stroke="hsl(240, 82%, 63%)" strokeWidth={2} fill="url(#priceGrad)" activeDot={{ r: 4, fill: "hsl(240, 82%, 63%)" }} />
             </AreaChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Recent Trades */}
+      <div className="p-3 rounded-xl bg-card border border-border">
+        <p className="text-[10px] font-semibold text-foreground mb-2">Recent Trades</p>
+        <div className="space-y-1.5">
+          {[
+            { prop: "Sky Villas #31", price: "₹4,65,000", time: "2h ago", type: "Buy" },
+            { prop: "Coorg #22", price: "₹2,42,000", time: "5h ago", type: "Sell" },
+            { prop: "Residences #112", price: "₹7,10,000", time: "1d ago", type: "Buy" },
+          ].map((t, i) => (
+            <div key={i} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
+              <div>
+                <p className="text-[11px] font-medium text-foreground">{t.prop}</p>
+                <p className="text-[9px] text-muted-foreground">{t.time}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[11px] font-semibold text-foreground">{t.price}</p>
+                <p className={`text-[9px] font-medium ${t.type === "Buy" ? "text-teal" : "text-primary"}`}>{t.type}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -113,7 +159,11 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
                       </div>
                       <div className="flex items-center gap-0.5">
                         <Clock className="w-2.5 h-2.5 text-muted-foreground" />
-                        <span className="text-[9px] text-muted-foreground">{listing.daysListed}d listed</span>
+                        <span className="text-[9px] text-muted-foreground">{listing.daysListed}d</span>
+                      </div>
+                      <div className="flex items-center gap-0.5">
+                        <ShieldCheck className="w-2.5 h-2.5 text-teal" />
+                        <span className="text-[9px] text-teal">Verified</span>
                       </div>
                       <span className="text-[9px] px-1.5 py-0.5 rounded bg-accent text-muted-foreground">{listing.condition}</span>
                     </div>
