@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const SplashScreen = () => (
   <div className="h-full flex flex-col items-center justify-center relative overflow-hidden">
     {/* Solid navy gradient background */}
-    <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, #132B5E 0%, #0A1A3B 50%, #060E24 100%)" }} />
+    <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, #FFF 0%, #FFF 50%, #FFF 100%)" }} />
 
     {/* Subtle blue glow behind logo */}
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full" style={{ background: "radial-gradient(circle, rgba(30, 58, 138, 0.3) 0%, transparent 70%)" }} />
@@ -14,15 +14,15 @@ const SplashScreen = () => (
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="relative z-10 flex flex-col items-center"
     >
-      <div className="w-20 h-20 rounded-2xl gradient-gold flex items-center justify-center mb-6 glow-gold">
-        <span className="text-3xl font-display font-bold text-white">O</span>
+      <div className="w-20 h-20 rounded-2xl gradient-gold flex items-center justify-center mb-6">
+        <span className="text-3xl font-display font-bold text-[#FFF]">O</span>
       </div>
 
       <motion.h1
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="text-2xl font-display font-bold text-white tracking-wide"
+        className="text-2xl font-display font-bold text-[#0A1A3B] tracking-wide"
       >
         One Property
       </motion.h1>
@@ -38,7 +38,7 @@ const SplashScreen = () => (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="mt-4 text-xs text-white/70 tracking-[0.2em] uppercase"
+        className="mt-4 text-xs text-[#0A1A3B]/80 tracking-[0.2em] uppercase"
       >
         Luxury Fractional Ownership
       </motion.p>
