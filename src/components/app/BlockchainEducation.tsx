@@ -10,13 +10,13 @@ const steps = [
   { icon: Shield, title: "Blockchain Validation", desc: "Continuous validation ensures your ownership remains secure. Dynamic token verification cross-references the blockchain ledger in real-time to protect against fraud." },
 ];
 
-const BlockchainProtection = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => (
+const BlockchainEducation = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => (
   <div className="px-4 pb-6 space-y-5">
     <div className="flex items-center gap-3 pt-2">
       <button onClick={() => onNavigate("profile")} className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
         <ArrowLeft className="w-4 h-4 text-foreground" />
       </button>
-      <h1 className="text-base font-display font-bold text-foreground">Blockchain Protection</h1>
+      <h1 className="text-base font-display font-bold text-foreground">Blockchain Protected System</h1>
     </div>
 
     <div className="text-center py-2">
@@ -75,4 +75,4 @@ const BlockchainProtection = ({ onNavigate }: { onNavigate: (s: AppScreen) => vo
   </div>
 );
 
-export default BlockchainProtection;
+export default BlockchainEducation;

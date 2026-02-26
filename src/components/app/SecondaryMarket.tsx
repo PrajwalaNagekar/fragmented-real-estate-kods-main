@@ -99,13 +99,13 @@ const SecondaryMarket = ({ onNavigate }: { onNavigate: (s: AppScreen) => void })
             <AreaChart data={fragmentPriceHistory}>
               <defs>
                 <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(250, 100%, 55%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(250, 100%, 55%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="price" stroke="hsl(240, 82%, 63%)" strokeWidth={2} fill="url(#priceGrad)" activeDot={{ r: 4, fill: "hsl(240, 82%, 63%)" }} />
+              <Area type="monotone" dataKey="price" stroke="hsl(250, 100%, 55%)" strokeWidth={2} fill="url(#priceGrad)" activeDot={{ r: 4, fill: "hsl(250, 100%, 55%)" }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

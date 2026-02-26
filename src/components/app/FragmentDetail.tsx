@@ -141,13 +141,13 @@ const FragmentDetail = ({ fragmentId, onNavigate }: { fragmentId: string; onNavi
             <AreaChart data={incomeHistory}>
               <defs>
                 <linearGradient id="tealGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(240, 90%, 40%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(240, 90%, 40%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(250, 80%, 40%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(250, 80%, 40%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="income" stroke="hsl(240, 90%, 40%)" strokeWidth={2} fill="url(#tealGrad)" activeDot={{ r: 4, fill: "hsl(240, 90%, 40%)" }} />
+              <Area type="monotone" dataKey="income" stroke="hsl(250, 80%, 40%)" strokeWidth={2} fill="url(#tealGrad)" activeDot={{ r: 4, fill: "hsl(250, 80%, 40%)" }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

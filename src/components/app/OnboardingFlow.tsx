@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Upload, Check, Phone, Mail, User, Building, ShieldCheck, Lock, Eye } from "lucide-react";
+import { ArrowRight, Upload, Check, Phone, Mail, User, Building, ShieldCheck, Lock, Eye, EyeOff } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 type AuthMode = "entry" | "signin" | "signup";
@@ -8,15 +8,11 @@ type AuthMode = "entry" | "signin" | "signup";
 const OnboardingFlow = ({ onComplete }: { onComplete: () => void }) => {
   const [authMode, setAuthMode] = useState<AuthMode>("entry");
   const [step, setStep] = useState(0);
-  const [loginMethod] = useState<"contact">("contact");
   const [otp, setOtp] = useState("");
-  const [forgotFlow, setForgotFlow] = useState(false);
-  const [forgotContact, setForgotContact] = useState("");
-  const [forgotOtp, setForgotOtp] = useState("");
-  const [signInOtpSent, setSignInOtpSent] = useState(false);
-  const [forgotOtpSent, setForgotOtpSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [useOtp, setUseOtp] = useState(false);
 
-  const signupSteps = ["Register", "Verify", "Documents", "Profile", "Welcome"];
+  const signupSteps = ["Register", "Verify", "Documents", "Welcome"];
 
   const handleSignIn = () => onComplete();
 
@@ -62,70 +58,53 @@ const OnboardingFlow = ({ onComplete }: { onComplete: () => void }) => {
           <h2 className="text-xl font-display font-bold mb-2">Welcome Back</h2>
           <p className="text-sm text-muted-foreground mb-8">Sign in to your account</p>
 
-          <div className="flex gap-1.5 mb-6">
-            <button
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-medium bg-primary text-primary-foreground`}
-            >
-              <Mail className="w-3.5 h-3.5" />
-              Email / Phone number
-            </button>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">Email or Phone</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input type="text" placeholder="you@example.com or +91 98765 43210"
+                  className="w-full bg-accent rounded-xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:border-primary transition-colors" />
+              </div>
+            </div>
+
+            {!useOtp ? (
+              <>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input type={showPassword ? "text" : "password"} placeholder="Enter password"
+                      className="w-full bg-accent rounded-xl pl-10 pr-10 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:border-primary transition-colors" />
+                    <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2">
+                      {showPassword ? <EyeOff className="w-4 h-4 text-muted-foreground" /> : <Eye className="w-4 h-4 text-muted-foreground" />}
+                    </button>
+                  </div>
+                </div>
+                <button className="text-xs text-primary">Forgot Password?</button>
+                <button onClick={() => setUseOtp(true)} className="text-xs text-primary/70 underline w-full text-center mt-2">
+                  Login with OTP instead
+                </button>
+              </>
+            ) : (
+              <div className="mt-4">
+                <p className="text-xs text-muted-foreground mb-3">Enter OTP sent to your email/phone</p>
+                <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                  <InputOTPGroup>
+                    {[0,1,2,3,4,5].map(i => (
+                      <InputOTPSlot key={i} index={i} className="w-10 h-11 rounded-lg bg-accent border-border text-foreground text-lg" />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+                <div className="flex items-center justify-between mt-3">
+                  <button className="text-xs text-primary">Resend Code</button>
+                  <button onClick={() => setUseOtp(false)} className="text-xs text-muted-foreground underline">
+                    Use password instead
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-
-          {!forgotFlow ? (
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="you@example.com or +91 98765 43210"
-                className="w-full bg-accent rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:border-primary"
-                onChange={() => setSignInOtpSent(false)}
-              />
-
-              {!signInOtpSent ? (
-                <div className="flex items-center justify-between">
-                  <button onClick={() => setSignInOtpSent(true)} className="text-sm text-primary">Send OTP</button>
-                  <button onClick={() => setForgotFlow(true)} className="text-xs text-muted-foreground">Forgot Password?</button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-3">Enter OTP sent to your contact</p>
-                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                    <InputOTPGroup>
-                      {[0,1,2,3,4,5].map(i => (
-                        <InputOTPSlot key={i} index={i} className="w-10 h-11 rounded-lg bg-accent border-border text-foreground text-lg" />
-                      ))}
-                    </InputOTPGroup>
-                  </InputOTP>
-                  <button className="mt-3 text-xs text-primary" onClick={() => setSignInOtpSent(false)}>Resend Code</button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <label className="text-xs text-muted-foreground mb-1 block">Enter Email or Phone</label>
-              <input value={forgotContact} onChange={e => setForgotContact(e.target.value)}
-                placeholder="you@example.com or +91 98765 43210"
-                className="w-full bg-accent rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:border-primary" />
-
-              {!forgotOtpSent ? (
-                <div className="flex items-center justify-between">
-                  <button onClick={() => setForgotOtpSent(true)} className="text-sm text-primary">Send OTP</button>
-                  <button onClick={() => setForgotFlow(false)} className="text-xs text-muted-foreground">Cancel</button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-3">Enter OTP sent to your contact</p>
-                  <InputOTP maxLength={6} value={forgotOtp} onChange={setForgotOtp}>
-                    <InputOTPGroup>
-                      {[0,1,2,3,4,5].map(i => (
-                        <InputOTPSlot key={i} index={i} className="w-10 h-11 rounded-lg bg-accent border-border text-foreground text-lg" />
-                      ))}
-                    </InputOTPGroup>
-                  </InputOTP>
-                  <button className="mt-3 text-xs text-primary" onClick={() => setForgotOtpSent(false)}>Resend Code</button>
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         <div className="px-6 pb-8 pt-4 space-y-3">
@@ -218,39 +197,6 @@ const OnboardingFlow = ({ onComplete }: { onComplete: () => void }) => {
             )}
 
             {step === 3 && (
-              <div className="pt-8">
-                <h2 className="text-xl font-display font-bold mb-2">Complete Profile</h2>
-                <p className="text-sm text-muted-foreground mb-6">Tell us about yourself</p>
-                <div className="space-y-3">
-                  {[
-                    { icon: User, label: "Full Name", placeholder: "Rahul Kapoor" },
-                    { icon: Phone, label: "Contact", placeholder: "+91 98765 43210" },
-                    { icon: Building, label: "Investor Type", placeholder: "Individual" },
-                  ].map(field => (
-                    <div key={field.label}>
-                      <label className="text-xs text-muted-foreground mb-1 block">{field.label}</label>
-                      <div className="relative">
-                        <field.icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input placeholder={field.placeholder} defaultValue={field.placeholder}
-                          className="w-full bg-accent rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none border border-border focus:border-primary transition-colors" />
-                      </div>
-                    </div>
-                  ))}
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">Risk Profile</label>
-                    <div className="flex gap-2">
-                      {["Conservative", "Moderate", "Aggressive"].map(r => (
-                        <button key={r} className={`flex-1 py-2.5 rounded-xl text-xs font-medium ${r === "Moderate" ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground border border-border"}`}>
-                          {r}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {step === 4 && (
               <div className="pt-12 flex flex-col items-center text-center">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 15 }}
                   className="w-20 h-20 rounded-full gradient-gold flex items-center justify-center mb-6 glow-gold">
@@ -279,7 +225,7 @@ const OnboardingFlow = ({ onComplete }: { onComplete: () => void }) => {
       <div className="px-6 pb-8 pt-4 space-y-2">
         <button onClick={next}
           className="w-full py-3.5 rounded-2xl gradient-gold text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 glow-gold active:scale-[0.98] transition-transform">
-          {step === 4 ? "Enter Dashboard" : "Continue"}
+          {step === 3 ? "Enter Dashboard" : "Continue"}
           <ArrowRight className="w-4 h-4" />
         </button>
         {step === 0 && <button onClick={() => setAuthMode("entry")} className="w-full text-center text-xs text-muted-foreground">← Back</button>}

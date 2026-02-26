@@ -5,7 +5,7 @@ import { AreaChart, Area, XAxis, ResponsiveContainer, BarChart, Bar, Tooltip } f
 import { properties, neighborhoodData, formatCurrency } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
 
-type BuyStep = "browse" | "breakdown" | "confirm";
+type BuyStep = "browse" | "breakdown" | "confirm-request" | "confirm-enquiry";
 
 const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavigate: (s: AppScreen, id?: string) => void }) => {
   const property = properties.find(p => p.id === propertyId) || properties[0];
@@ -123,18 +123,18 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => setBuyStep("confirm")} className="flex-1 py-3 rounded-xl gradient-gold text-white text-sm font-semibold">Create Request</button>
-                <button onClick={() => setBuyStep("confirm")} className="flex-1 py-3 rounded-xl bg-accent border border-border text-sm font-medium text-foreground">Submit Enquiry</button>
+                <button onClick={() => setBuyStep("confirm-request")} className="flex-1 py-3 rounded-xl gradient-gold text-white text-sm font-semibold">Create Request</button>
+                <button onClick={() => setBuyStep("confirm-enquiry")} className="flex-1 py-3 rounded-xl bg-accent border border-border text-sm font-medium text-foreground">Submit Enquiry</button>
               </div>
               <button onClick={() => setBuyStep("browse")} className="text-[10px] text-muted-foreground w-full text-center">← Back</button>
             </motion.div>
           )}
 
-          {buyStep === "confirm" && (
+          {(buyStep === "confirm-request" || buyStep === "confirm-enquiry") && (
             <motion.div key="confirm" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3 text-center">
               <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
               <p className="text-sm font-display font-bold text-foreground">Request Submitted!</p>
-              <p className="text-[11px] text-muted-foreground">One Property team will contact you within 24 hours.</p>
+              <p className="text-[11px] text-muted-foreground">One Property will contact you within 24 hrs.</p>
               <div className="text-left space-y-2 pt-2">
                 <p className="text-[10px] font-semibold text-foreground">Next Steps:</p>
                 {["Site Visit Scheduling", "Agreement Signing", "Power of Attorney Transfer", "Final Documentation"].map((s, i) => (
@@ -145,7 +145,9 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
                 ))}
               </div>
               <div className="flex gap-2 pt-2">
-                <button onClick={() => onNavigate("purchaseTracker")} className="flex-1 py-2.5 rounded-xl gradient-gold text-white text-xs font-semibold">Track Purchase</button>
+                {buyStep === "confirm-request" && (
+                  <button onClick={() => onNavigate("purchaseTracker")} className="flex-1 py-2.5 rounded-xl gradient-gold text-white text-xs font-semibold">Track Request</button>
+                )}
                 <button onClick={() => setBuyStep("browse")} className="flex-1 py-2.5 rounded-xl bg-accent text-xs font-medium text-foreground">Browse More</button>
               </div>
             </motion.div>
@@ -184,7 +186,7 @@ const PropertyDetail = ({ propertyId, onNavigate }: { propertyId: string; onNavi
               <BarChart data={neighborhoodData.growthTrend}>
                 <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} />
                 <Tooltip content={<PriceTooltip />} />
-                <Bar dataKey="growth" fill="hsl(240, 90%, 40%)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="growth" fill="hsl(250, 80%, 40%)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

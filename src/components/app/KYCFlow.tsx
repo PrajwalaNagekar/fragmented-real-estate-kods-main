@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, User, Upload, Video, CheckCircle2, Phone, Mail, MapPin, Briefcase, Users, Calendar, FileCheck, Camera, Shield } from "lucide-react";
+import { ArrowLeft, User, Upload, Video, CheckCircle2, Phone, Mail, MapPin, Briefcase, Users, Calendar, FileCheck, Camera, Shield, Building2 } from "lucide-react";
 import type { AppScreen } from "@/pages/Index";
 
 const KYCFlow = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
   const [step, setStep] = useState(0);
   const [docs, setDocs] = useState({ aadhaar: false, pan: false, address: false, photo: false });
+  const [showBankDetails, setShowBankDetails] = useState(true);
   const totalSteps = 4;
   const progress = ((step + 1) / totalSteps) * 100;
 
@@ -47,8 +48,7 @@ const KYCFlow = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
                 { icon: Briefcase, label: "Occupation", placeholder: "Software Engineer", type: "text" },
                 { icon: MapPin, label: "Address", placeholder: "HSR Layout, Bangalore", type: "text" },
                 { icon: Calendar, label: "Place of Birth", placeholder: "Bangalore, India", type: "text" },
-                { icon: Users, label: "Nominee", placeholder: "Nominee Name", type: "text" },
-                { icon: Users, label: "Nominee Relationship", placeholder: "Spouse / Parent / Sibling", type: "text" },
+                { icon: Users, label: "Add Nominee (Spouse / Parents / Children)", placeholder: "Nominee name & relationship", type: "text" },
               ].map(f => (
                 <div key={f.label}>
                   <label className="text-[10px] text-muted-foreground mb-1 block">{f.label}</label>
@@ -59,6 +59,38 @@ const KYCFlow = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
                   </div>
                 </div>
               ))}
+
+              {/* Bank Details */}
+              <div className="p-3 rounded-2xl bg-card border border-border space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold text-foreground flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-primary" /> Bank Details
+                  </p>
+                  <button onClick={() => setShowBankDetails(!showBankDetails)} className="text-[9px] text-primary underline">
+                    {showBankDetails ? "Hide" : "Show"}
+                  </button>
+                </div>
+                {showBankDetails ? (
+                  <div className="space-y-2">
+                    {[
+                      { label: "Bank Name", placeholder: "e.g. State Bank of India" },
+                      { label: "Account Number", placeholder: "e.g. 1234567890" },
+                      { label: "IFSC Code", placeholder: "e.g. SBIN0001234" },
+                    ].map(f => (
+                      <div key={f.label}>
+                        <label className="text-[9px] text-muted-foreground mb-0.5 block">{f.label}</label>
+                        <input placeholder={f.placeholder}
+                          className="w-full bg-accent rounded-lg px-3 py-2 text-xs text-foreground outline-none border border-border focus:border-primary transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[10px] text-muted-foreground">You can complete bank details later during buy/sell process.</p>
+                )}
+                <button onClick={() => setShowBankDetails(false)} className="text-[9px] text-muted-foreground underline w-full text-center">
+                  Skip - Complete Later
+                </button>
+              </div>
             </div>
           )}
 
@@ -122,7 +154,7 @@ const KYCFlow = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
                 <Shield className="w-10 h-10 text-teal" />
               </motion.div>
               <h3 className="text-sm font-display font-bold text-foreground">Verification in Progress</h3>
-              <p className="text-[11px] text-muted-foreground max-w-[280px] mx-auto">Your documents and video verification are being reviewed. Verification will be completed and approval granted within 24 hours.</p>
+              <p className="text-[11px] text-muted-foreground max-w-[280px] mx-auto">Your documents and video verification are being reviewed. Approval will be granted within 24 hours.</p>
               <div className="p-4 rounded-2xl bg-card border border-border space-y-2">
                 {["Personal Details", "Document Upload", "Video KYC", "Approval"].map((s, i) => (
                   <div key={s} className="flex items-center gap-3">
@@ -143,8 +175,8 @@ const KYCFlow = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation */}
-      {step < 3 && step !== 2 && (
+      {/* Navigation - no duplicate button for step 2 */}
+      {step < 2 && (
         <div className="flex gap-3 pt-2">
           {step === 0 && (
             <button onClick={() => onNavigate("profile")} className="flex-1 py-3 rounded-xl bg-accent text-sm font-medium text-foreground text-center">

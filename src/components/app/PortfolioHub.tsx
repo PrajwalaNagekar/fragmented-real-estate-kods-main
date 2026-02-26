@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Map, List, MapPin, ShieldCheck, Eye, EyeOff, Home as HomeIcon, Tag, DollarSign, FileCheck, Download, X, Database, FileDown, FileSpreadsheet, Store } from "lucide-react";
+import { Map, List, MapPin, ShieldCheck, Eye, EyeOff, Home as HomeIcon, Tag, DollarSign, FileCheck, Download, X, Database, FileDown, FileSpreadsheet, Store, BarChart3 } from "lucide-react";
 import { userFragments, kycDocuments, formatCurrency } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
 import { toast } from "@/hooks/use-toast";
@@ -42,11 +42,15 @@ const PortfolioHub = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) 
     y: 20 + Math.floor(i / 3) * 35 + Math.random() * 15,
   }));
 
+  // Properties to List (not yet listed)
+  const listedFragmentIds = ["frag-1"];
+  const propertiesToList = userFragments.filter(f => !listedFragmentIds.includes(f.id));
+
   const listedForRent = [
-    { id: "lr-1", name: "Sky Villas, Gurgaon", price: "₹32,500/mo", status: "Verification Pending", stage: "Under Review" },
+    { id: "lr-1", name: "Sky Villas, Gurgaon", price: "₹32,500/mo", status: "Verification Pending", stage: "Under Review", views: 124 },
   ];
   const listedForSale = [
-    { id: "ls-1", name: "Coorg Hill Retreat", price: "₹2,80,000", status: "Active", stage: "Published" },
+    { id: "ls-1", name: "Coorg Hill Retreat", price: "₹2,80,000", status: "Active", stage: "Published", views: 89 },
   ];
 
   const tabs: { id: PortfolioTab; label: string }[] = [
@@ -102,17 +106,34 @@ const PortfolioHub = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) 
           </div>
 
           {viewMode === "map" && (
-            <div className="relative h-[220px] rounded-2xl bg-card border border-border overflow-hidden">
-              <div className="absolute inset-0 opacity-20" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23888' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }} />
+            <div className="relative h-[220px] rounded-2xl bg-card border-2 border-dashed border-border overflow-hidden">
+              {/* Grid lines (roads) */}
+              <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                {/* Grid */}
+                {[25, 50, 75].map(p => (
+                  <g key={p}>
+                    <line x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" stroke="hsl(215,30%,30%)" strokeWidth="0.5" opacity="0.15" />
+                    <line x1="0" y1={`${p}%`} x2="100%" y2={`${p}%`} stroke="hsl(215,30%,30%)" strokeWidth="0.5" opacity="0.15" />
+                  </g>
+                ))}
+                {/* Coastline curve (western edge) */}
+                <path d="M 8,0 Q 12,30 6,60 Q 10,90 4,120 Q 8,160 2,200 Q 6,220 4,240" fill="none" stroke="hsl(192,80%,50%)" strokeWidth="1.5" opacity="0.25" strokeLinecap="round" />
+                {/* Region borders */}
+                <path d="M 30,20 L 75,15 L 85,45 L 70,80 L 40,75 L 25,50 Z" fill="none" stroke="hsl(192,60%,45%)" strokeWidth="1" opacity="0.3" strokeDasharray="4,3" />
+                <path d="M 40,75 L 70,80 L 75,120 L 60,140 L 35,130 L 30,95 Z" fill="none" stroke="hsl(192,60%,45%)" strokeWidth="1" opacity="0.3" strokeDasharray="4,3" />
+                <path d="M 15,40 L 30,20 L 40,75 L 30,95 L 15,70 Z" fill="none" stroke="hsl(192,60%,45%)" strokeWidth="1" opacity="0.25" strokeDasharray="4,3" />
+                {/* Region labels */}
+                <text x="52%" y="42%" textAnchor="middle" fill="hsl(215,20%,55%)" fontSize="8" fontFamily="Inter" opacity="0.6">Maharashtra</text>
+                <text x="50%" y="72%" textAnchor="middle" fill="hsl(215,20%,55%)" fontSize="8" fontFamily="Inter" opacity="0.6">Karnataka</text>
+                <text x="22%" y="55%" textAnchor="middle" fill="hsl(215,20%,55%)" fontSize="7" fontFamily="Inter" opacity="0.6">Goa</text>
+              </svg>
               <div className="absolute inset-0 bg-gradient-to-br from-teal/5 to-primary/5" />
               <div className="absolute top-3 left-3 px-2 py-1 rounded-lg bg-card/90 backdrop-blur border border-border">
                 <p className="text-[9px] text-muted-foreground font-medium">📍 India · Properties Map</p>
               </div>
               {mapPinData.map(pin => (
                 <motion.button key={pin.id} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}
-                  onClick={() => onNavigate("fragmentDetail", pin.id)} className="absolute group" style={{ left: `${pin.x}%`, top: `${pin.y}%` }}>
+                  onClick={() => onNavigate("fragmentDetail", pin.id)} className="absolute group z-10" style={{ left: `${pin.x}%`, top: `${pin.y}%` }}>
                   <div className="relative">
                     <MapPin className="w-6 h-6 text-primary drop-shadow-lg" />
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-lg bg-card border border-border shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
@@ -197,6 +218,7 @@ const PortfolioHub = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) 
 
       {tab === "listed" && (
         <div className="space-y-4">
+          {/* Listed for Rent */}
           <div>
             <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5"><HomeIcon className="w-3.5 h-3.5 text-teal" /> Listed for Rent</p>
             {listedForRent.map(l => (
@@ -207,9 +229,15 @@ const PortfolioHub = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) 
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{l.status}</span>
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-1">Stage: {l.stage}</p>
+                <div className="flex items-center gap-1 mt-1.5">
+                  <BarChart3 className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground">{l.views} views</span>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* Listed for Sale */}
           <div>
             <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5"><Store className="w-3.5 h-3.5 text-primary" /> Listed for Sale</p>
             {listedForSale.map(l => (
@@ -220,6 +248,10 @@ const PortfolioHub = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) 
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal/10 text-teal font-medium">{l.status}</span>
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-1">Stage: {l.stage}</p>
+                <div className="flex items-center gap-1 mt-1.5">
+                  <BarChart3 className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-[10px] text-muted-foreground">{l.views} views</span>
+                </div>
               </div>
             ))}
           </div>

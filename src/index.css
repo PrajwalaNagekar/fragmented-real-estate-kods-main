@@ -5,79 +5,87 @@
 @tailwind utilities;
 
 @layer base {
-  /* Light theme (DEFAULT) - Premium Blue */
+  /* Light theme - Clean Cyan-Blue */
   :root {
-    --background: 240 10% 97%;
-    --foreground: 230 25% 12%;
+    --background: 210 40% 98%;
+    --foreground: 215 50% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 230 25% 12%;
+    --card-foreground: 215 50% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 12%;
+    --popover-foreground: 215 50% 10%;
 
-    --primary: 240 82% 63%;
+    --primary: 220 80% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 15% 92%;
-    --secondary-foreground: 230 20% 20%;
+    --secondary: 215 25% 92%;
+    --secondary-foreground: 215 30% 20%;
 
-    --muted: 240 10% 93%;
-    --muted-foreground: 230 10% 45%;
+    --muted: 215 20% 93%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 240 14% 95%;
-    --accent-foreground: 230 25% 12%;
+    --accent: 210 30% 95%;
+    --accent-foreground: 215 50% 10%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 10% 90%;
-    --input: 240 10% 90%;
-    --ring: 240 82% 63%;
-
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 220 80% 50%;
     --radius: 0.75rem;
 
-    --gold: 240 82% 63%;
+    --gold: 220 80% 50%;
     --gold-foreground: 0 0% 100%;
-    --gold-muted: 240 70% 50%;
-    --rose: 240 70% 75%;
+    --gold-muted: 220 65% 40%;
+    --rose: 220 60% 65%;
     --rose-foreground: 0 0% 100%;
-    --teal: 240 90% 40%;
+    --teal: 172 66% 50%;
     --teal-foreground: 0 0% 100%;
 
-    --sidebar-background: 240 12% 95%;
-    --sidebar-foreground: 230 20% 20%;
-    --sidebar-primary: 240 82% 63%;
+    --sidebar-background: 210 30% 95%;
+    --sidebar-foreground: 215 30% 20%;
+    --sidebar-primary: 220 80% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 14% 92%;
-    --sidebar-accent-foreground: 230 25% 12%;
-    --sidebar-border: 240 10% 88%;
-    --sidebar-ring: 240 82% 63%;
+    --sidebar-accent: 215 25% 92%;
+    --sidebar-accent-foreground: 215 50% 10%;
+    --sidebar-border: 215 20% 88%;
+    --sidebar-ring: 220 80% 50%;
   }
 
-  /* Dark theme - Deep Blue/Black */
+  /* Dark theme - Deep Navy + Cyan */
   .theme-dark {
-    --background: 240 30% 4%;
+    --background: 215 50% 7%;
     --foreground: 0 0% 96%;
-    --card: 240 25% 8%;
+    --card: 210 45% 12%;
     --card-foreground: 0 0% 96%;
-    --popover: 240 25% 6%;
+    --popover: 215 50% 9%;
     --popover-foreground: 0 0% 96%;
-    --primary: 240 82% 63%;
+    --primary: 220 80% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 20% 14%;
+    --secondary: 215 35% 15%;
     --secondary-foreground: 0 0% 90%;
-    --muted: 240 20% 12%;
-    --muted-foreground: 240 10% 50%;
-    --accent: 240 20% 15%;
+    --muted: 215 35% 13%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 210 40% 14%;
     --accent-foreground: 0 0% 96%;
-    --border: 240 20% 16%;
-    --input: 240 20% 16%;
-    --sidebar-background: 240 30% 3%;
+    --border: 215 30% 18%;
+    --input: 215 30% 18%;
+    --ring: 220 80% 60%;
+    --gold: 220 80% 60%;
+    --gold-foreground: 0 0% 100%;
+    --gold-muted: 220 65% 45%;
+    --rose: 220 60% 70%;
+    --rose-foreground: 0 0% 100%;
+    --teal: 172 66% 50%;
+    --teal-foreground: 0 0% 100%;
+    --sidebar-background: 215 50% 5%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-accent: 240 20% 12%;
+    --sidebar-accent: 215 35% 13%;
     --sidebar-accent-foreground: 0 0% 96%;
-    --sidebar-border: 240 20% 14%;
+    --sidebar-border: 215 30% 16%;
+    --sidebar-ring: 220 80% 60%;
   }
 }
 
@@ -119,7 +127,7 @@
     border-color: hsl(var(--gold) / 0.2);
   }
   .gradient-gold {
-    background: linear-gradient(135deg, hsl(240, 71%, 25%), hsl(240, 72%, 24%));
+    background: linear-gradient(135deg, hsl(220, 60%, 15%), hsl(220, 70%, 35%));
   }
   .gradient-card {
     background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--card) / 0.7));
@@ -128,14 +136,14 @@
     background: linear-gradient(
       110deg,
       transparent 33%,
-      hsla(240, 73%, 36%, 0.3) 50%,
+      hsl(220, 80%, 50%, 0.3) 50%,
       transparent 67%
     );
     background-size: 300% 100%;
     animation: shimmer 2.5s ease-in-out infinite;
   }
   .glow-gold {
-    box-shadow: 0 0 20px hsl(240, 82%, 63%, 0.2), 0 0 60px hsl(240, 82%, 63%, 0.05);
+    box-shadow: 0 0 20px rgba(30, 58, 138, 0.35), 0 0 60px rgba(30, 58, 138, 0.12);
   }
 }
 

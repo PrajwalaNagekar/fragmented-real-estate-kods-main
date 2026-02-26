@@ -8,7 +8,7 @@ const ProfileScreen = ({ onNavigate }: { onNavigate: (s: AppScreen) => void }) =
   const menuItems = [
     { icon: Edit3, label: "Edit Profile", screen: "editProfile" as AppScreen },
     { icon: ShieldCheck, label: "KYC Verification", screen: "kyc" as AppScreen, badge: kycComplete ? "Verified" : "Pending" },
-    { icon: Link2, label: "Blockchain Education", screen: "blockchainEducation" as AppScreen },
+    { icon: Link2, label: "Blockchain Protected System", screen: "blockchainEducation" as AppScreen },
     { icon: Settings, label: "Settings", screen: "settings" as AppScreen },
     { icon: HelpCircle, label: "Help & FAQ", screen: "helpFaq" as AppScreen },
     { icon: Info, label: "About Us", screen: "aboutUs" as AppScreen },

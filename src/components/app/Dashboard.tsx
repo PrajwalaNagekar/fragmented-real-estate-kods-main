@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, ArrowUpRight, Landmark, Layers, Calendar, Sparkles, ChevronRight, Bell } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { TrendingUp, ArrowUpRight, Landmark, Layers, Calendar, Sparkles, ChevronRight, Bell, Building2 } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { portfolioSummary, wealthOverTime, recentIncome, aiInsight, formatCurrency, userFragments } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
 
@@ -37,41 +37,77 @@ const Dashboard = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => 
         </button>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards - Colorful */}
       <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "Total Value", value: formatCurrency(totalValue), icon: Landmark, color: "text-primary" },
-          { label: "Total ROI", value: `+${totalROI}%`, icon: TrendingUp, color: "text-teal" },
-          { label: "Rental Income", value: formatCurrency(rentalIncome), icon: ArrowUpRight, color: "text-primary" },
-        ].map((card, i) => (
-          <motion.div
-            key={card.label}
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className={`p-4 rounded-2xl bg-card border border-border ${i === 2 ? "col-span-2" : ""}`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <card.icon className={`w-4 h-4 ${card.color}`} />
-              <span className="text-[11px] text-muted-foreground">{card.label}</span>
+        {/* Total Value - Indigo */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0 }}
+          className="p-4 rounded-2xl bg-card border border-border relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-[0.07]" style={{ background: "hsl(220, 80%, 50%)" }} />
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsl(220, 80%, 50%, 0.12)" }}>
+              <Landmark className="w-3.5 h-3.5" style={{ color: "hsl(220, 80%, 50%)" }} />
             </div>
-            <p className={`text-lg font-bold ${card.color}`}>{card.value}</p>
-          </motion.div>
-        ))}
+            <span className="text-[11px] text-muted-foreground">Total Value</span>
+          </div>
+          <p className="text-lg font-bold text-foreground">{formatCurrency(totalValue)}</p>
+        </motion.div>
+
+        {/* Total ROI - Emerald */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="p-4 rounded-2xl bg-card border border-border relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-[0.07]" style={{ background: "hsl(160, 84%, 39%)" }} />
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsl(160, 84%, 39%, 0.12)" }}>
+              <TrendingUp className="w-3.5 h-3.5" style={{ color: "hsl(160, 84%, 39%)" }} />
+            </div>
+            <span className="text-[11px] text-muted-foreground">Total ROI</span>
+          </div>
+          <p className="text-lg font-bold" style={{ color: "hsl(160, 84%, 39%)" }}>+{totalROI}%</p>
+        </motion.div>
+
+        {/* Rental Income - Orange/Amber - Full width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="col-span-2 p-4 rounded-2xl bg-card border border-border relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-[0.06]" style={{ background: "hsl(220, 80%, 50%)" }} />
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "hsl(220, 80%, 50%, 0.12)" }}>
+              <ArrowUpRight className="w-3.5 h-3.5" style={{ color: "hsl(220, 80%, 50%)" }} />
+            </div>
+            <span className="text-[11px] text-muted-foreground">Rental Income</span>
+          </div>
+          <p className="text-lg font-bold text-foreground">{formatCurrency(rentalIncome)}</p>
+        </motion.div>
       </div>
 
-      {/* Health Score */}
+      {/* Health Score - with colored ring */}
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
         className="p-4 rounded-2xl bg-card border border-border flex items-center gap-4"
       >
         <div className="relative w-16 h-16 flex-shrink-0">
           <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-            <circle cx="18" cy="18" r="15.9" fill="none" stroke="hsl(var(--muted))" strokeWidth="2.5" />
-            <circle cx="18" cy="18" r="15.9" fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5"
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="hsl(var(--muted))" strokeWidth="2.8" />
+            {/* Gradient arc */}
+            <defs>
+              <linearGradient id="healthGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="hsl(220, 80%, 50%)" />
+                <stop offset="100%" stopColor="hsl(160, 84%, 39%)" />
+              </linearGradient>
+            </defs>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="url(#healthGrad)" strokeWidth="2.8"
               strokeDasharray={`${healthScore} ${100 - healthScore}`} strokeLinecap="round" />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-sm font-bold text-primary">{healthScore}</span>
+            <span className="text-sm font-bold" style={{ color: "hsl(220, 80%, 50%)" }}>{healthScore}</span>
           </div>
         </div>
         <div>
@@ -86,7 +122,7 @@ const Dashboard = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => 
         className="p-4 rounded-2xl bg-card border border-border"
       >
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs text-muted-foreground">Wealth Over Time</p>
+          <p className="text-xs text-muted-foreground font-medium">Wealth Over Time</p>
           <div className="flex gap-1">
             {(["today", "month", "year"] as const).map(p => (
               <button key={p} onClick={() => setPeriod(p)}
@@ -96,62 +132,73 @@ const Dashboard = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => 
             ))}
           </div>
         </div>
-        <div className="h-[140px]">
+        <div className="h-[160px]">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData}>
+            <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(240, 82%, 63%)" stopOpacity={0} />
+                  <stop offset="0%" stopColor="hsl(220, 80%, 50%)" stopOpacity={0.25} />
+                  <stop offset="100%" stopColor="hsl(220, 80%, 50%)" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
               <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} />
-              <YAxis hide />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 9 }} tickFormatter={(v: number) => `₹${(v / 100000).toFixed(0)}L`} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" stroke="hsl(240, 82%, 63%)" strokeWidth={2} fill="url(#blueGrad)" activeDot={{ r: 5, fill: "hsl(240, 82%, 63%)" }} />
+              <Area type="monotone" dataKey="value" stroke="hsl(220, 80%, 50%)" strokeWidth={2.5} fill="url(#blueGrad)" dot={{ r: 3, fill: "hsl(220, 80%, 50%)", strokeWidth: 0 }} activeDot={{ r: 6, fill: "hsl(220, 80%, 50%)", stroke: "white", strokeWidth: 2 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </motion.div>
 
-      {/* Quick Stats */}
+      {/* Quick Stats - Colorful icons */}
       <div className="grid grid-cols-3 gap-2">
         {[
-          { icon: Layers, label: "Properties", value: propertiesOwned },
-          { icon: Layers, label: "Fragments", value: fragmentsHeld },
-          { icon: Calendar, label: "Next Payout", value: new Date(nextPayoutDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) },
+          { icon: Building2, label: "Properties", value: propertiesOwned, iconColor: "hsl(220, 80%, 50%)", bgColor: "hsl(220, 80%, 50%, 0.1)" },
+          { icon: Layers, label: "Fragments", value: fragmentsHeld, iconColor: "hsl(280, 70%, 55%)", bgColor: "hsl(280, 70%, 55%, 0.1)" },
+          { icon: Calendar, label: "Next Payout", value: new Date(nextPayoutDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" }), iconColor: "hsl(340, 75%, 55%)", bgColor: "hsl(340, 75%, 55%, 0.1)" },
         ].map(stat => (
           <div key={stat.label} className="p-3 rounded-xl bg-card border border-border text-center">
-            <stat.icon className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
+            <div className="w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: stat.bgColor }}>
+              <stat.icon className="w-4 h-4" style={{ color: stat.iconColor }} />
+            </div>
             <p className="text-xs font-bold text-foreground">{stat.value}</p>
             <p className="text-[9px] text-muted-foreground">{stat.label}</p>
           </div>
         ))}
       </div>
 
-      {/* AI Insight */}
+      {/* AI Insight - Gradient accent */}
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-        className="p-4 rounded-2xl bg-primary/5 border border-primary/20"
+        className="p-4 rounded-2xl border relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, hsl(220, 80%, 50%, 0.08), hsl(280, 70%, 55%, 0.06))", borderColor: "hsl(220, 80%, 50%, 0.2)" }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-primary">{aiInsight.title}</span>
+          <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: "hsl(280, 70%, 55%, 0.15)" }}>
+            <Sparkles className="w-3.5 h-3.5" style={{ color: "hsl(280, 70%, 55%)" }} />
+          </div>
+          <span className="text-xs font-semibold" style={{ color: "hsl(280, 70%, 55%)" }}>{aiInsight.title}</span>
         </div>
         <p className="text-xs text-foreground/80 leading-relaxed">{aiInsight.text}</p>
       </motion.div>
 
       {/* Recent Income */}
       <div>
-        <p className="text-xs text-muted-foreground mb-3">Recent Income</p>
+        <p className="text-xs text-muted-foreground mb-3 font-medium">Recent Income</p>
         <div className="space-y-2">
-          {recentIncome.slice(0, 3).map(item => (
+          {recentIncome.slice(0, 3).map((item, i) => (
             <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-card border border-border">
-              <div>
-                <p className="text-xs font-medium text-foreground">{item.property}</p>
-                <p className="text-[10px] text-muted-foreground">{new Date(item.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "hsl(160, 84%, 39%, 0.1)" }}>
+                  <ArrowUpRight className="w-3.5 h-3.5" style={{ color: "hsl(160, 84%, 39%)" }} />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-foreground">{item.property}</p>
+                  <p className="text-[10px] text-muted-foreground">{new Date(item.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</p>
+                </div>
               </div>
-              <span className="text-sm font-semibold text-teal">+{formatCurrency(item.amount)}</span>
+              <span className="text-sm font-semibold" style={{ color: "hsl(160, 84%, 39%)" }}>+{formatCurrency(item.amount)}</span>
             </div>
           ))}
         </div>
@@ -159,21 +206,34 @@ const Dashboard = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => 
 
       {/* My Fragments Quick Access */}
       <div>
-        <p className="text-xs text-muted-foreground mb-3">My Fragments</p>
+        <p className="text-xs text-muted-foreground mb-3 font-medium">My Fragments</p>
         <div className="space-y-2">
-          {userFragments.slice(0, 3).map(f => (
-            <button
-              key={f.id}
-              onClick={() => onNavigate("fragmentDetail", f.id)}
-              className="flex items-center justify-between p-3 rounded-xl bg-card border border-border w-full text-left"
-            >
-              <div>
-                <p className="text-xs font-medium text-foreground">{f.propertyName}</p>
-                <p className="text-[10px] text-muted-foreground">{f.percentageOwned}% owned · {f.fragmentIds.length} fragments</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-            </button>
-          ))}
+          {userFragments.slice(0, 3).map((f, i) => {
+            const colors = [
+              { icon: "hsl(220, 80%, 50%)", bg: "hsl(220, 80%, 50%, 0.1)" },
+              { icon: "hsl(340, 75%, 55%)", bg: "hsl(340, 75%, 55%, 0.1)" },
+              { icon: "hsl(30, 90%, 50%)", bg: "hsl(30, 90%, 50%, 0.1)" },
+            ];
+            const c = colors[i % colors.length];
+            return (
+              <button
+                key={f.id}
+                onClick={() => onNavigate("fragmentDetail", f.id)}
+                className="flex items-center justify-between p-3 rounded-xl bg-card border border-border w-full text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: c.bg }}>
+                    <Building2 className="w-3.5 h-3.5" style={{ color: c.icon }} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-foreground">{f.propertyName}</p>
+                    <p className="text-[10px] text-muted-foreground">{f.percentageOwned}% owned · {f.fragmentIds.length} fragments</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

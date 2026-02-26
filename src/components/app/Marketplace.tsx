@@ -1,15 +1,34 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, Flame, ChevronRight, TrendingUp } from "lucide-react";
+import { Search, SlidersHorizontal, Flame, ChevronRight, TrendingUp, MapPin, X } from "lucide-react";
 import { properties, formatCurrency } from "@/data/mockData";
 import type { AppScreen } from "@/pages/Index";
 
-const riskColor = { Low: "text-teal bg-teal/10", Medium: "text-primary bg-primary/10", High: "text-rose bg-rose/10" };
-const sortOptions = ["Trending", "Highest Yield", "Newest"];
+const riskColor: Record<string, string> = { Low: "text-teal bg-teal/10", Medium: "text-primary bg-primary/10", High: "text-rose bg-rose/10" };
+const sortOptions = ["Trending", "Highest Yield", "Newest", "Low Risk"];
+const propertyTypes = ["All", "Residential", "Commercial", "Villa"];
+const locations = ["All", "Gurgaon", "Bangalore", "Goa", "Coorg"];
 
 const Marketplace = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) => void }) => {
   const [sort, setSort] = useState("Trending");
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterType, setFilterType] = useState("All");
+  const [filterLocation, setFilterLocation] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const hotProperties = properties.filter(p => p.trending);
+
+  const filteredProperties = properties.filter(p => {
+    if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase()) && !p.location.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (filterType !== "All" && p.type !== filterType) return false;
+    if (filterLocation !== "All" && !p.location.includes(filterLocation)) return false;
+    return true;
+  }).sort((a, b) => {
+    if (sort === "Highest Yield") return b.yieldPercent - a.yieldPercent;
+    if (sort === "Newest") return 0;
+    if (sort === "Low Risk") return a.riskLevel === "Low" ? -1 : 1;
+    return b.trending ? 1 : -1;
+  });
 
   return (
     <div className="px-4 pb-6 space-y-5">
@@ -22,12 +41,45 @@ const Marketplace = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) =
       <div className="flex gap-2">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input placeholder="Search properties..." className="w-full bg-accent rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground outline-none border border-border focus:border-primary transition-colors" />
+          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search properties..."
+            className="w-full bg-accent rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground outline-none border border-border focus:border-primary transition-colors" />
         </div>
-        <button className="w-10 h-10 rounded-xl bg-accent border border-border flex items-center justify-center">
-          <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
+        <button onClick={() => setShowFilters(!showFilters)} className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-accent border-border text-muted-foreground"}`}>
+          <SlidersHorizontal className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Filters Panel */}
+      {showFilters && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="p-4 rounded-2xl bg-card border border-border space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-foreground">Filters</p>
+            <button onClick={() => { setFilterType("All"); setFilterLocation("All"); }} className="text-[10px] text-primary">Reset</button>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted-foreground mb-1.5">Property Type</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {propertyTypes.map(t => (
+                <button key={t} onClick={() => setFilterType(t)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${filterType === t ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"}`}>
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted-foreground mb-1.5">Location</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {locations.map(l => (
+                <button key={l} onClick={() => setFilterLocation(l)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${filterLocation === l ? "bg-primary text-primary-foreground" : "bg-accent text-muted-foreground"}`}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Sort */}
       <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
@@ -37,6 +89,38 @@ const Marketplace = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) =
             {s}
           </button>
         ))}
+      </div>
+
+      {/* Map Preview */}
+      <div className="relative h-[140px] rounded-2xl bg-card border-2 border-border overflow-hidden">
+        {/* Map grid pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(hsl(var(--border)) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)
+          `,
+          backgroundSize: "30px 30px",
+        }} />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-teal/5" />
+        {/* Map roads */}
+        <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-muted-foreground/20" />
+        <div className="absolute top-0 bottom-0 left-1/3 w-[2px] bg-muted-foreground/20" />
+        <div className="absolute top-0 bottom-0 left-2/3 w-[2px] bg-muted-foreground/20" />
+        <div className="absolute top-1/4 left-0 right-0 h-[1px] bg-muted-foreground/10" />
+        <div className="absolute top-3/4 left-0 right-0 h-[1px] bg-muted-foreground/10" />
+        {/* Map pins */}
+        {properties.slice(0, 4).map((p, i) => (
+          <button key={p.id} onClick={() => onNavigate("propertyDetail", p.id)}
+            className="absolute group" style={{ left: `${15 + i * 22}%`, top: `${25 + (i % 2) * 35}%` }}>
+            <MapPin className="w-5 h-5 text-primary drop-shadow" />
+            <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-1.5 py-0.5 rounded bg-card border border-border shadow text-[8px] font-medium text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              {p.name.split(",")[0]}
+            </div>
+          </button>
+        ))}
+        <div className="absolute bottom-2 right-2 px-2 py-1 rounded-lg bg-card/90 backdrop-blur border border-border">
+          <p className="text-[8px] text-muted-foreground">📍 {filteredProperties.length} properties</p>
+        </div>
       </div>
 
       {/* Hot Properties Carousel */}
@@ -76,7 +160,7 @@ const Marketplace = ({ onNavigate }: { onNavigate: (s: AppScreen, id?: string) =
 
       {/* All Properties */}
       <div className="space-y-3">
-        {properties.map((p, i) => (
+        {filteredProperties.map((p, i) => (
           <motion.button
             key={p.id}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
